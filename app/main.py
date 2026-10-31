@@ -1,4 +1,3 @@
-
 import os
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -9,6 +8,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.database import engine, init_db
+from app.routers import users, workouts
 
 load_dotenv()
 
@@ -24,11 +24,13 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
 
 app = FastAPI(title=APP_NAME, lifespan=lifespan)
 
+app.include_router(users.router)
+app.include_router(workouts.router)
+
 
 @app.get("/health")
 def health_check() -> dict[str, str]:
     """Check API and database availability."""
-
     try:
         with engine.connect() as connection:
             connection.execute(text("SELECT 1"))
@@ -43,4 +45,4 @@ def health_check() -> dict[str, str]:
         raise HTTPException(
             status_code=503,
             detail="Database connection unavailable",
-        )
+        ) from None
