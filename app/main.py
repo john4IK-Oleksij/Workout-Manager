@@ -8,7 +8,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.database import engine, init_db
-from app.routers import users, workouts
+from app.routers import stats, users, workouts
 
 load_dotenv()
 
@@ -26,6 +26,7 @@ app = FastAPI(title=APP_NAME, lifespan=lifespan)
 
 app.include_router(users.router)
 app.include_router(workouts.router)
+app.include_router(stats.router, prefix="/stats", tags=["Statistics"])
 
 
 @app.get("/health")

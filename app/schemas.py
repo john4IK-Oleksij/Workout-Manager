@@ -73,3 +73,23 @@ class WorkoutResponse(BaseModel):
     distance_km: Decimal
     done_on: date
 
+
+class SummaryResponse(BaseModel):
+    """Schema for overall user workout summary statistics."""
+
+    owner_id: int
+    total_workouts: int
+    total_minutes: int
+    total_km: Decimal
+    avg_duration: Decimal | float | None
+    min_distance: Decimal | None
+    max_distance: Decimal | None
+
+
+class WorkoutKindStats(BaseModel):
+    """Schema for workout statistics grouped by workout kind."""
+
+    kind: WorkoutKind
+    workout_count: int
+    total_minutes: int
+    total_km: Decimal
