@@ -85,3 +85,4 @@ class Workout(Base):
         "User",
         back_populates="workouts",
     )
+

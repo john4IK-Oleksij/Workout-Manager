@@ -1,18 +1,28 @@
 
 import os
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.database import engine
+from app.database import engine, init_db
 
 load_dotenv()
 
 APP_NAME = os.getenv("APP_NAME", "Workout Tracking API")
 
-app = FastAPI(title=APP_NAME)
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None, None]:
+    """Initialize database tables on startup."""
+    init_db()
+    yield
+
+
+app = FastAPI(title=APP_NAME, lifespan=lifespan)
 
 
 @app.get("/health")

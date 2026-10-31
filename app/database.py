@@ -1,4 +1,3 @@
-
 import os
 from collections.abc import Generator
 
@@ -39,13 +38,13 @@ SessionLocal = sessionmaker(
 
 class Base(DeclarativeBase):
     """Base class for all SQLAlchemy ORM models."""
-    pass
 
 
 def init_db() -> None:
-    """Import ORM models and create database tables if they do not exist."""
-    import app.models  # noqa: F401
+    """Register ORM models and create database tables if they do not exist."""
+    from app.models import User, Workout
 
+    _ = (User, Workout)
     Base.metadata.create_all(bind=engine)
 
 
