@@ -15,7 +15,7 @@
 - **python-dotenv** — завантаження конфігурації зі змінних середовища (`.env`)
 - **MySQL / MariaDB 10.4.32** — реляційна система керування базами даних
 
-## Початкова структура проєкту
+## Структура проєкту
 
 ```text
 project/
@@ -23,10 +23,23 @@ project/
 ├── app/
 │   ├── __init__.py
 │   ├── main.py
-│   └── database.py
+│   ├── database.py
+│   ├── models.py
+│   ├── schemas.py
+│   │
+│   ├── routers/
+│   │   ├── __init__.py
+│   │   ├── users.py
+│   │   └── workouts.py
+│   │
+│   └── services/
+│       ├── __init__.py
+│       ├── users_service.py
+│       └── workouts_service.py
 │
 ├── specs/
 │
+├── seed.py
 ├── .env.example
 ├── .gitignore
 ├── requirements.txt
@@ -95,6 +108,16 @@ DB_NAME=workouts_db
 CREATE DATABASE IF NOT EXISTS workouts_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
+### 5. Наповнення бази тестовими даними (`seed.py`)
+
+Для автоматичного створення таблиць і наповнення бази даних початковим тестовим набором (3 користувачі та 16 тренувань за 3 місяці) виконайте:
+
+```bash
+python seed.py
+```
+
+Повторний запуск скрипта безпечний і не створює дублікатів.
+
 ## Запуск застосунку
 
 Запустіть сервер розробки за допомогою Uvicorn:
@@ -108,22 +131,9 @@ uvicorn app.main:app --reload
 Інтерактивна документація Swagger UI доступна за адресою:
 - `http://127.0.0.1:8000/docs`
 
-## Перевірка працездатності (`GET /health`)
+## Доступні ендпоінти
 
-Виконайте запит до тестового ендпоінта:
-
-```bash
-curl http://127.0.0.1:8000/health
-```
-
-Або відкрийте у браузері: `http://127.0.0.1:8000/health`
-
-Очікувана відповідь (`HTTP 200 OK`):
-
-```json
-{
-  "status": "ok",
-  "application": "Workout Tracking API"
-}
-```
-
+- `GET /health` — перевірка працездатності API та підключення до БД.
+- `POST /users` — створення нового користувача.
+- `POST /workouts` — створення тренування для існуючого користувача.
+- `GET /workouts` — отримання списку тренувань (підтримує параметри `owner_id`, `limit`, `offset`).
