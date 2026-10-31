@@ -86,6 +86,30 @@ class SummaryResponse(BaseModel):
     max_distance: Decimal | None
 
 
+class MonthlyStatsResponse(BaseModel):
+    """Schema for workout statistics grouped by calendar month."""
+
+    month: str
+    workouts_count: int
+    total_distance_km: Decimal
+
+
+class TopUserStatsResponse(BaseModel):
+    """Schema for a user with their workout count."""
+
+    user_id: int
+    name: str
+    workouts_count: int
+
+
+class DoneRatioResponse(BaseModel):
+    """Schema for long workout count versus total workout count."""
+
+    owner_id: int
+    long_workouts_count: int
+    total_workouts_count: int
+
+
 class WorkoutKindStats(BaseModel):
     """Schema for workout statistics grouped by workout kind."""
 
