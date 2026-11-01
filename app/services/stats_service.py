@@ -1,8 +1,11 @@
 from decimal import Decimal
+from typing import Any
 
 from fastapi import HTTPException, status
 from sqlalchemy import case, func, select
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.attributes import InstrumentedAttribute
+from sqlalchemy.sql.elements import ColumnElement
 
 from app.models import User, Workout
 from app.schemas import (
@@ -23,12 +26,13 @@ LONG_WORKOUT_MIN_DURATION = 60
 
 # Whitelists of ready-made SQLAlchemy expressions for /stats/group.
 # User input is only ever used as a dictionary key, never as an identifier.
-GROUP_COLUMNS = {
+
+GROUP_COLUMNS: dict[GroupBy, InstrumentedAttribute[Any]] = {
     GroupBy.KIND: Workout.kind,
     GroupBy.OWNER_ID: Workout.owner_id,
 }
 
-METRICS = {
+METRICS: dict[Metric, ColumnElement[Any]] = {
     Metric.COUNT: func.count(Workout.id),
     Metric.SUM_DURATION: func.coalesce(func.sum(Workout.duration_min), 0),
     Metric.SUM_DISTANCE: func.coalesce(

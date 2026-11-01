@@ -19,28 +19,46 @@ def client() -> Generator[TestClient, None, None]:
 
 
 @pytest.fixture
-def make_user(client: TestClient) -> Generator[Callable[..., int], None, None]:
+def make_user(
+    client: TestClient,
+) -> Generator[Callable[..., int], None, None]:
     """Create isolated users through the API and delete them after the test."""
+
     created_ids: list[int] = []
 
     def _make_user(name: str = "Test User") -> int:
         email = f"test_{uuid.uuid4().hex}@example.com"
-        response = client.post("/users", json={"name": name, "email": email})
+
+        response = client.post(
+            "/users",
+            json={"name": name, "email": email},
+        )
+
         assert response.status_code == 201, response.text
-        user_id = response.json()["id"]
+
+        response_data: dict[str, Any] = response.json()
+        user_id = int(response_data["id"])
         created_ids.append(user_id)
+
         return user_id
 
     yield _make_user
 
     with SessionLocal() as session:
-        session.execute(delete(Workout).where(Workout.owner_id.in_(created_ids)))
-        session.execute(delete(User).where(User.id.in_(created_ids)))
-        session.commit()
+        if created_ids:
+            session.execute(
+                delete(Workout).where(Workout.owner_id.in_(created_ids))
+            )
+            session.execute(
+                delete(User).where(User.id.in_(created_ids))
+            )
+            session.commit()
 
 
 @pytest.fixture
-def add_workout(client: TestClient) -> Callable[..., dict[str, Any]]:
+def add_workout(
+    client: TestClient,
+) -> Callable[..., dict[str, Any]]:
     """Create a workout through the API."""
 
     def _add_workout(
@@ -62,8 +80,10 @@ def add_workout(client: TestClient) -> Callable[..., dict[str, Any]]:
                 "done_on": done_on,
             },
         )
+
         assert response.status_code == 201, response.text
-        return response.json()
+
+        response_data: dict[str, Any] = response.json()
+        return response_data
 
     return _add_workout
-
