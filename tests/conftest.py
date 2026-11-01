@@ -65,7 +65,7 @@ def add_workout(
         owner_id: int,
         kind: str = "run",
         duration_min: int = 30,
-        distance_km: str | float | int = "5.00",
+        distance_km: str | float = "5.00",
         done_on: str = "2026-01-10",
         title: str = "Test workout",
     ) -> dict[str, Any]:

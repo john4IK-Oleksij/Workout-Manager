@@ -1,28 +1,28 @@
 # MISSION.md
 # Workout Tracking API
-## Main Project Mission
+## Головна місія проєкту
 
-## 1. Project Mission
+## 1. Місія проєкту
 
-Develop a complete REST API application for tracking users' workouts and generating statistics using SQLAlchemy ORM aggregate queries and MySQL.
+Розробити повноцінний REST API для обліку тренувань користувачів і формування статистики за допомогою агрегатних запитів SQLAlchemy ORM та MySQL.
 
-The application must implement all requirements from the original homework specification:
+Застосунок повинен реалізовувати всі вимоги початкового завдання:
 
 **Облік тренувань: агрегатні запити через ORM SQLAlchemy та MySQL.**
 
-The attached `ORM_MySQL(1).docx` is the authoritative source for functional requirements, database structure, endpoint behavior, validation rules, security requirements, and bonus tasks.
+Прикріплений файл `ORM_MySQL(1).docx` є основним джерелом функціональних вимог, структури бази даних, поведінки ендпоінтів, правил валідації, вимог безпеки та додаткових завдань.
 
-The studied presentation about aggregate functions in SQLAlchemy is the technical and educational reference for implementation decisions.
+Вивчена презентація про агрегатні функції в SQLAlchemy є технічним та навчальним орієнтиром для прийняття рішень під час реалізації.
 
-The goal is to build a working, maintainable, testable application while demonstrating correct SQLAlchemy 2.1 ORM usage.
+Мета — створити робочий, підтримуваний і протестований застосунок, продемонструвавши правильне використання SQLAlchemy 2.1 ORM.
 
-Do not omit, reinterpret, or replace mandatory requirements from the original homework.
+Не пропускати, не переосмислювати та не замінювати обов'язкові вимоги початкового завдання.
 
 ---
 
-## 2. Technology Stack
+## 2. Технологічний стек
 
-Use exactly the following primary technology stack:
+Використовувати такий основний технологічний стек:
 
 - Python
 - FastAPI
@@ -31,9 +31,9 @@ Use exactly the following primary technology stack:
 - MySQL / MariaDB 10.4.32
 - PyMySQL
 
-Use modern SQLAlchemy 2.x ORM syntax.
+Використовувати сучасний синтаксис SQLAlchemy 2.x ORM.
 
-Preferred query construction methods:
+Бажані методи побудови запитів:
 
 - `select()`
 - `func`
@@ -52,56 +52,56 @@ Preferred query construction methods:
 - `scalar_subquery()`
 - `over()`
 
-Do not use deprecated SQLAlchemy query patterns.
+Не використовувати застарілі шаблони запитів SQLAlchemy.
 
 ---
 
-## 3. Application Domain
+## 3. Предметна область застосунку
 
-The application manages users and their physical workouts.
+Застосунок призначений для обліку користувачів та їхніх фізичних тренувань.
 
-A user can have multiple workouts.
+Один користувач може мати багато тренувань.
 
-Every workout belongs to one user through a foreign key.
+Кожне тренування належить одному користувачеві через зовнішній ключ.
 
-The database must contain exactly the two required primary entities:
+База даних повинна містити рівно дві обов'язкові основні сутності:
 
 - `User`
 - `Workout`
 
-### User table
+### Таблиця User
 
-| Field | Type | Requirements |
+| Поле | Тип | Вимоги |
 |---|---|---|
-| id | Integer | Primary key, autoincrement |
-| name | String(100) | Required |
-| email | String(255) | Unique |
+| id | Integer | Первинний ключ, автозбільшення |
+| name | String(100) | Обов'язкове поле |
+| email | String(255) | Унікальне значення |
 
-### Workout table
+### Таблиця Workout
 
-| Field | Type | Requirements |
+| Поле | Тип | Вимоги |
 |---|---|---|
-| id | Integer | Primary key, autoincrement |
-| owner_id | Integer | Required FK to users.id |
-| title | String(100) | Workout title |
+| id | Integer | Первинний ключ |
+| owner_id | Integer | Обов'язковий FK до users.id |
+| title | String(100) | Назва тренування |
 | kind | String(30) | run, gym, yoga, swim |
-| duration_min | Integer | Greater than zero |
-| distance_km | Numeric(6,2) | Zero is allowed for gym workouts |
-| done_on | Date | Workout date |
+| duration_min | Integer | Більше нуля |
+| distance_km | Numeric(6,2) | Для тренувань у залі дозволено 0 |
+| done_on | Date | Дата тренування |
 
-Implement the ORM relationship between `User` and `Workout`.
+Реалізувати ORM-зв'язок між `User` та `Workout`.
 
-Respect all field types, constraints, and requirements specified in the original homework.
+Дотримуватися всіх типів полів, обмежень та вимог, зазначених у початковому завданні.
 
-Do not introduce additional domain entities unless they are technically necessary and explicitly justified.
+Не додавати додаткові сутності предметної області, якщо вони не є технічно необхідними та явно не обґрунтованими.
 
 ---
 
-## 4. Project Architecture
+## 4. Архітектура проєкту
 
-Organize the application into clear modules.
+Організувати застосунок у вигляді зрозумілих модулів.
 
-Recommended structure:
+Рекомендована структура:
 
 ```text
 project/
@@ -132,120 +132,120 @@ project/
 └── README.md
 ```
 
-This is the recommended organization. Individual implementation specifications may refine the structure while preserving separation of responsibilities.
+Це рекомендована організація. Окремі специфікації реалізації можуть уточнювати структуру, зберігаючи розділення відповідальностей.
 
-### Architectural principles
+### Архітектурні принципи
 
-- `models.py` contains SQLAlchemy ORM models.
-- `database.py` manages the MySQL connection and database sessions.
-- `schemas.py` contains Pydantic request and response schemas.
-- `types.py` contains shared types and enumerations.
-- `routers/` contains FastAPI endpoints.
-- `services/` contains database operations and SQLAlchemy query logic.
-- `seed.py` initializes the required example dataset.
-- `specs/` contains independent implementation steps.
+- `models.py` містить ORM-моделі SQLAlchemy.
+- `database.py` відповідає за підключення до MySQL та керування сесіями бази даних.
+- `schemas.py` містить Pydantic-схеми запитів і відповідей.
+- `types.py` містить спільні типи та переліки.
+- `routers/` містить ендпоінти FastAPI.
+- `services/` містить операції з базою даних та логіку SQLAlchemy-запитів.
+- `seed.py` створює необхідний демонстраційний набір даних.
+- `specs/` містить окремі етапи реалізації.
 
-Keep route handlers simple.
+Обробники маршрутів повинні залишатися простими.
 
-Database queries and aggregate calculations belong in service functions, not directly in route handlers.
+Запити до бази даних та агрегатні обчислення повинні знаходитися у функціях сервісного рівня, а не безпосередньо в обробниках маршрутів.
 
-Use FastAPI dependency injection for database sessions.
+Для передачі сесій бази даних використовувати механізм dependency injection FastAPI.
 
-Avoid unnecessary architectural complexity.
+Уникати зайвої архітектурної складності.
 
 ---
 
-## 5. Database Configuration
+## 5. Налаштування бази даних
 
-Configure SQLAlchemy to connect to MySQL / MariaDB 10.4.32 using PyMySQL.
+Налаштувати SQLAlchemy для підключення до MySQL / MariaDB 10.4.32 через PyMySQL.
 
-Use environment variables for database configuration.
+Використовувати змінні середовища для налаштування підключення до бази даних.
 
-Provide an `.env.example` file with the required configuration keys, without real credentials.
+Створити файл `.env.example` з необхідними ключами конфігурації, але без реальних облікових даних.
 
-Configure the database connection with:
+Налаштувати підключення до бази даних із параметром:
 
 `hide_parameters=True`
 
-Create the required tables using SQLAlchemy ORM metadata.
+Створити необхідні таблиці за допомогою метаданих SQLAlchemy ORM.
 
-Ensure that database errors and API responses do not expose SQL statements, database credentials, or sensitive connection parameters.
+Переконатися, що помилки бази даних та відповіді API не розкривають SQL-запити, облікові дані або конфіденційні параметри підключення.
 
 ---
 
-## 6. Mandatory API Functionality
+## 6. Обов'язкова функціональність API
 
-Implement all endpoints required by the original homework.
+Реалізувати всі ендпоінти, передбачені початковим завданням.
 
-### Part A — Basic application functionality
+### Частина A — Базова функціональність застосунку
 
-#### Users
+#### Користувачі
 
 `POST /users`
 
-Create a new user.
+Створення нового користувача.
 
-Validate the request using a dedicated Pydantic input schema.
+Перевіряти вхідні дані за допомогою окремої Pydantic-схеми.
 
-Respect email uniqueness.
+Забезпечити унікальність електронної пошти.
 
-#### Workouts
+#### Тренування
 
 `POST /workouts`
 
-Create a workout associated with an existing user.
+Створення тренування, пов'язаного з наявним користувачем.
 
-Validate the workout fields and ownership reference.
+Перевіряти поля тренування та посилання на власника.
 
-#### Workout listing
+#### Список тренувань
 
 `GET /workouts`
 
-Support:
+Підтримувати:
 
-- Filtering by `owner_id`.
-- Pagination through `limit` and `offset`.
-- Maximum `limit` value of 100.
+- Фільтрацію за `owner_id`.
+- Пагінацію через `limit` та `offset`.
+- Максимальне значення `limit` — 100.
 
-Use dedicated response schemas.
+Використовувати окремі схеми відповідей.
 
-### Seed data
+### Початкові дані
 
-Implement `seed.py`.
+Реалізувати `seed.py`.
 
-The script must create at least:
+Скрипт повинен створювати щонайменше:
 
-- 3 users.
-- 15 workouts.
-- Different workout kinds.
-- Workout dates distributed across 3 months.
+- 3 користувачів.
+- 15 тренувань.
+- Різні види тренувань.
+- Дати тренувань, розподілені протягом 3 місяців.
 
-The dataset must make all required aggregate endpoints testable.
+Набір даних повинен дозволяти перевірити всі обов'язкові агрегатні ендпоінти.
 
-Use reproducible seed data.
+Забезпечити відтворюваність початкових даних.
 
 ---
 
-## 7. Aggregate Statistics — Part B
+## 7. Агрегатна статистика — Частина B
 
-All aggregate calculations must be performed by MySQL through SQLAlchemy ORM expressions.
+Усі агрегатні обчислення повинні виконуватися на стороні MySQL через вирази SQLAlchemy ORM.
 
-Do not load all workout records into Python to calculate statistics.
+Не завантажувати всі записи тренувань у Python для самостійного обчислення статистики.
 
-### 7.1 Summary statistics
+### 7.1 Загальна статистика
 
 `GET /stats/summary?owner_id=1`
 
-Return one result containing:
+Повернути один результат, який містить:
 
-- Total number of workouts.
-- Total workout duration in minutes.
-- Total distance in kilometers.
-- Average workout duration.
-- Minimum distance.
-- Maximum distance.
+- Загальну кількість тренувань.
+- Загальну тривалість тренувань у хвилинах.
+- Загальну дистанцію в кілометрах.
+- Середню тривалість тренування.
+- Мінімальну дистанцію.
+- Максимальну дистанцію.
 
-Use the appropriate aggregate functions:
+Використовувати відповідні агрегатні функції:
 
 - `func.count()`
 - `func.sum()`
@@ -253,95 +253,95 @@ Use the appropriate aggregate functions:
 - `func.min()`
 - `func.max()`
 
-Calculate the required values in one aggregate query.
+Обчислювати необхідні значення одним агрегатним запитом.
 
-### 7.2 Statistics by workout kind
+### 7.2 Статистика за видами тренувань
 
 `GET /stats/by-kind?owner_id=1`
 
-Group workouts by `kind`.
+Групувати тренування за полем `kind`.
 
-Return:
+Повернути:
 
-- Workout kind.
-- Workout count.
-- Total duration in minutes.
-- Total distance in kilometers.
+- Вид тренування.
+- Кількість тренувань.
+- Загальну тривалість у хвилинах.
+- Загальну дистанцію в кілометрах.
 
-Use `group_by()`.
+Використовувати `group_by()`.
 
-### 7.3 Statistics by month
+### 7.3 Статистика за місяцями
 
 `GET /stats/by-month?owner_id=1`
 
-Group workouts by calendar month.
+Групувати тренування за календарними місяцями.
 
-Use the MySQL expression:
+Використовувати вираз MySQL:
 
 `func.date_format(Workout.done_on, "%Y-%m")`
 
-Return:
+Повернути:
 
-- Month.
-- Workout count.
-- Total distance in kilometers.
+- Місяць.
+- Кількість тренувань.
+- Загальну дистанцію в кілометрах.
 
-Define the month expression once and reuse it in both `select()` and `group_by()`.
+Оголосити вираз місяця один раз і повторно використовувати його в `select()` та `group_by()`.
 
-### 7.4 Top users
+### 7.4 Найактивніші користувачі
 
 `GET /stats/top-users?min_workouts=3`
 
-Return users with at least the specified number of workouts.
+Повернути користувачів, які мають не менше зазначеної кількості тренувань.
 
-Use:
+Використовувати:
 
 - `join()`
 - `group_by()`
 - `func.count()`
 - `having()`
-- Descending sorting.
+- Сортування за спаданням.
 
-The minimum workout count must be configurable through a query parameter.
+Мінімальна кількість тренувань повинна задаватися через параметр запиту.
 
-### 7.5 Long workout ratio
+### 7.5 Частка тривалих тренувань
 
 `GET /stats/done-ratio?owner_id=1`
 
-Calculate:
+Обчислити:
 
-- Number of long workouts.
-- Total number of workouts.
+- Кількість тривалих тренувань.
+- Загальну кількість тренувань.
 
-A long workout is defined as:
+Тривалим вважається тренування, для якого:
 
 `duration_min >= 60`
 
-Use conditional aggregation:
+Використовувати умовну агрегацію:
 
 `func.count(case((Workout.duration_min >= 60, Workout.id)))`
 
-MySQL does not support the aggregate `FILTER` syntax. Do not use it.
+MySQL не підтримує синтаксис агрегатного `FILTER`. Не використовувати його.
 
 ---
 
-## 8. Dynamic Aggregation and Security — Part C
+## 8. Динамічна агрегація та безпека — Частина C
 
-Implement:
+Реалізувати:
 
 `GET /stats/group?group_by=kind&metric=sum_duration&owner_id=1`
 
-The endpoint must allow controlled selection of:
+Ендпоінт повинен дозволяти контрольований вибір:
 
-- Grouping column.
-- Aggregate metric.
+- Колонки групування.
+- Агрегатної метрики.
 
-Use two explicit dictionaries of permitted SQLAlchemy expressions:
+Використовувати два явні словники дозволених виразів SQLAlchemy:
 
 - `GROUP_COLUMNS`
 - `METRICS`
 
-Example:
+Приклад:
 
 ```python
 GROUP_COLUMNS = {
@@ -354,62 +354,62 @@ METRICS = {
 }
 ```
 
-Retrieve SQL expressions from these dictionaries using validated request parameters.
+Отримувати SQLAlchemy-вирази з цих словників за допомогою перевірених параметрів запиту.
 
-Do not dynamically access ORM attributes or SQL functions using user-provided strings.
+Не використовувати динамічний доступ до атрибутів ORM або SQL-функцій через рядки, надані користувачем.
 
-The following approaches are forbidden:
+Заборонені такі підходи:
 
 ```python
 getattr(Workout, group_by)
 getattr(func, metric)
 ```
 
-Use `Enum` or `Literal` for parameter validation.
+Для валідації параметрів використовувати `Enum` або `Literal`.
 
-Unknown grouping or metric values must produce HTTP 422.
+Невідомі значення групування або метрики повинні повертати HTTP 422.
 
-Every statistics query must enforce the appropriate `owner_id` restriction.
+Кожен статистичний запит повинен обов'язково враховувати відповідне обмеження за `owner_id`.
 
 ---
 
-## 9. Bonus Features
+## 9. Додаткові завдання (Bonus)
 
-Implement bonus functionality only after all mandatory requirements are complete and verified.
+Реалізовувати додаткову функціональність лише після завершення та перевірки всіх обов'язкових вимог.
 
-### 9.1 Running cumulative distance
+### 9.1 Накопичувальна дистанція
 
 `GET /stats/running-total?owner_id=1`
 
-Calculate cumulative workout distance over time.
+Обчислювати накопичувальну дистанцію тренувань у часовій послідовності.
 
-Use a SQLAlchemy window function:
+Використовувати віконну функцію SQLAlchemy:
 
 `func.sum(...).over(order_by=...)`
 
-Return the workout date and cumulative distance.
+Повернути дату тренування та накопичену дистанцію.
 
-### 9.2 Ranking workout kinds
+### 9.2 Рейтинг видів тренувань
 
 `GET /stats/rank?owner_id=1`
 
-Rank workout kinds according to total workout duration.
+Ранжувати види тренувань відповідно до загальної тривалості.
 
-Use:
+Використовувати:
 
 `func.rank().over(...)`
 
-The ranking must be calculated in MySQL, not in Python.
+Ранжування повинно обчислюватися в MySQL, а не в Python.
 
 ---
 
-## 10. Aggregate Query Implementation Rules
+## 10. Правила реалізації агрегатних запитів
 
-Follow the SQLAlchemy concepts studied in the presentation.
+Дотримуватися концепцій SQLAlchemy, вивчених у презентації.
 
-### 10.1 Aggregate functions
+### 10.1 Агрегатні функції
 
-Use:
+Використовувати:
 
 - `count`
 - `sum`
@@ -417,301 +417,304 @@ Use:
 - `min`
 - `max`
 
-Prefer calculating multiple aggregate values in one query when they describe the same result.
+За можливості обчислювати кілька агрегатних значень одним запитом, якщо вони описують один результат.
 
-Use `session.scalar()` for a single scalar result.
+Використовувати `session.scalar()` для отримання одного скалярного значення.
 
-Use `session.execute()` when selecting multiple columns.
+Використовувати `session.execute()`, якщо вибирається кілька колонок.
 
-Use `session.scalars()` when only the first selected column is needed.
+Використовувати `session.scalars()`, якщо потрібна лише перша вибрана колонка.
 
-### 10.2 NULL handling
+### 10.2 Обробка NULL
 
-Understand the difference between zero and NULL.
+Розуміти різницю між нулем та NULL.
 
-Important SQL behavior:
+Важлива поведінка SQL:
 
-- `COUNT()` returns zero for an empty result.
-- `SUM()` can return NULL when there are no matching values.
-- `AVG()` can return NULL.
-- `MIN()` can return NULL.
-- `MAX()` can return NULL.
-- Aggregate functions generally ignore NULL values within their input rows.
+- `COUNT()` повертає нуль для порожнього результату.
+- `SUM()` може повертати NULL, якщо немає відповідних значень.
+- `AVG()` може повертати NULL.
+- `MIN()` може повертати NULL.
+- `MAX()` може повертати NULL.
+- Агрегатні функції зазвичай ігнорують NULL серед вхідних значень.
 
-Where the homework requires a sum to return zero instead of NULL, use:
+Якщо за умовами завдання сума повинна повертати нуль замість NULL, використовувати:
 
 `func.coalesce(func.sum(...), 0)`
 
-Use `func.nullif()` when division by zero must be avoided.
+Використовувати `func.nullif()`, коли потрібно уникнути ділення на нуль.
 
-Do not automatically replace every NULL with zero. Preserve the intended meaning of each field.
+Не замінювати автоматично кожне NULL на нуль. Зберігати початковий зміст кожного поля.
 
-### 10.3 Conditional aggregation
+### 10.3 Умовна агрегація
 
-Use:
+Для умовного підрахунку використовувати:
 
 `func.count(case((condition, Workout.id)))`
 
-for conditional counting.
-
-Remember that `COUNT()` ignores NULL values.
+Пам'ятати, що `COUNT()` ігнорує значення NULL.
 
 ### 10.4 GROUP BY
 
-Every selected non-aggregated column must appear in `group_by()`.
+Кожна вибрана неагрегована колонка повинна бути присутня в `group_by()`.
 
-Respect MySQL `ONLY_FULL_GROUP_BY`.
+Дотримуватися вимог MySQL `ONLY_FULL_GROUP_BY`.
 
-An error 1055 usually indicates that a selected non-aggregated column is missing from `GROUP BY`.
+Помилка 1055 зазвичай означає, що вибрана неагрегована колонка відсутня в `GROUP BY`.
 
-### 10.5 WHERE and HAVING
+### 10.5 WHERE та HAVING
 
-Use `where()` to filter individual database records before grouping.
+Використовувати `where()` для фільтрації окремих записів бази даних до групування.
 
-Use `having()` to filter aggregated groups.
+Використовувати `having()` для фільтрації вже сформованих агрегованих груп.
 
-Follow this logical query structure:
+Дотримуватися такої логічної послідовності запиту:
 
 1. WHERE
 2. GROUP BY
 3. HAVING
 4. ORDER BY
 
-### 10.6 JOIN and OUTER JOIN
+### 10.6 JOIN та OUTER JOIN
 
-Use the correct join type for the required result.
+Використовувати правильний тип об'єднання відповідно до необхідного результату.
 
-- `join()` returns matching records.
-- `outerjoin()` preserves parent records without matching child records.
+- `join()` повертає записи, для яких знайдено відповідність.
+- `outerjoin()` зберігає записи батьківської таблиці навіть без відповідних дочірніх записів.
 
-When counting child records after an outer join, count the child primary key rather than `count(*)`.
+Під час підрахунку дочірніх записів після зовнішнього об'єднання використовувати первинний ключ дочірньої таблиці, а не `count(*)`.
 
-### 10.7 Window functions
+### 10.7 Віконні функції
 
-Use `.over()` for cumulative calculations and ranking.
+Використовувати `.over()` для накопичувальних обчислень та ранжування.
 
-Do not replace database window functions with Python-side calculations.
+Не замінювати віконні функції бази даних обчисленнями в Python.
 
 ---
 
-## 11. Pydantic Requirements
+## 11. Вимоги до Pydantic
 
-Use Pydantic 2.
+Використовувати Pydantic 2.
 
-Create separate schemas for:
+Створити окремі схеми для:
 
-- User creation.
-- User response.
-- Workout creation.
-- Workout response.
-- Summary statistics.
-- Statistics by kind.
-- Statistics by month.
-- Top users.
-- Done ratio.
-- Dynamic grouping.
-- Bonus endpoint responses.
+- Створення користувача.
+- Відповіді з даними користувача.
+- Створення тренування.
+- Відповіді з даними тренування.
+- Загальної статистики.
+- Статистики за видами тренувань.
+- Статистики за місяцями.
+- Найактивніших користувачів.
+- Частки тривалих тренувань.
+- Відповідей динамічного групування.
+- Відповідей додаткових ендпоінтів.
 
-Input schemas must use:
+Вхідні схеми повинні використовувати:
 
 `extra="forbid"`
 
-Validate request data and query parameters.
+Перевіряти вхідні дані та параметри запитів.
 
-Response schemas must reflect actual database result types, including nullable values where applicable.
+Схеми відповідей повинні відповідати фактичним типам результатів бази даних, включно з можливими NULL-значеннями.
 
-Ensure that SQLAlchemy results such as `Decimal` are represented correctly in API responses.
+Забезпечити коректне представлення результатів SQLAlchemy, наприклад `Decimal`, у відповідях API.
 
-Each endpoint must explicitly declare its response schema.
-
----
-
-## 12. Error Handling and API Security
-
-Implement consistent API error handling.
-
-Requirements:
-
-- Do not return SQL statements in error responses.
-- Do not expose database connection strings.
-- Do not expose sensitive database parameters.
-- Use HTTP 404 when a requested referenced resource does not exist, where appropriate.
-- Use HTTP 422 for invalid request parameters and schema validation failures.
-- Enforce owner-based filtering in statistics queries.
-- Validate dynamic grouping and metric parameters against the allowed values.
-
-Never trust user-provided strings as SQL identifiers or SQL function names.
+Кожен ендпоінт повинен явно оголошувати свою схему відповіді.
 
 ---
 
-## 13. Testing and Verification
+## 12. Обробка помилок та безпека API
 
-Test the application against the original homework requirements.
+Реалізувати послідовну обробку помилок API.
 
-At minimum verify:
+Вимоги:
 
-### Database
-- Successful MySQL connection.
-- Correct table creation.
-- Primary and foreign key constraints.
-- Unique email constraint.
+- Не повертати SQL-запити у відповідях з помилками.
+- Не розкривати рядки підключення до бази даних.
+- Не розкривати конфіденційні параметри бази даних.
+- Використовувати HTTP 404, якщо запитуваний пов'язаний ресурс не існує, де це доречно.
+- Використовувати HTTP 422 для некоректних параметрів запиту та помилок валідації схем.
+- Забезпечити фільтрацію статистичних запитів за власником.
+- Перевіряти параметри динамічного групування та метрики за дозволеними значеннями.
 
-### Basic API
-- User creation.
-- Workout creation.
-- Workout listing.
-- Owner filtering.
-- Pagination.
-- Invalid request handling.
-
-### Aggregate endpoints
-- Correct summary values.
-- Correct grouping by kind.
-- Correct grouping by month.
-- Correct top-users filtering.
-- Correct long-workout counting.
-- Correct handling of empty sums.
-
-### Security
-- Invalid `group_by` returns 422.
-- Invalid `metric` returns 422.
-- Statistics respect `owner_id`.
-- Error responses do not reveal SQL statements or sensitive database parameters.
-
-### Bonus
-- Correct cumulative distance.
-- Correct ranking of workout kinds.
-
-Use MySQL / MariaDB 10.4.32 for integration tests because the application depends on MySQL/MariaDB-specific behavior, including `date_format()` and grouping rules.
+Ніколи не довіряти рядкам користувача як ідентифікаторам SQL або назвам SQL-функцій.
 
 ---
 
-## 14. Documentation
+## 13. Тестування та перевірка
 
-Create a `README.md` containing:
+Перевірити застосунок відповідно до вимог початкового завдання.
 
-- Project description.
-- Technology stack.
-- Project structure.
-- Installation instructions.
-- Environment configuration.
-- MySQL database setup.
-- Table creation.
-- Seed execution.
-- Application startup.
-- API documentation access.
-- Example requests.
+Щонайменше перевірити:
 
-Keep the detailed implementation plan in the `specs/` directory.
+### База даних
 
----
+- Успішне підключення до MySQL.
+- Коректне створення таблиць.
+- Обмеження первинних та зовнішніх ключів.
+- Унікальність електронної пошти.
 
-## 15. Implementation Workflow
+### Базовий API
 
-The project must be developed incrementally.
+- Створення користувача.
+- Створення тренування.
+- Отримання списку тренувань.
+- Фільтрацію за власником.
+- Пагінацію.
+- Обробку некоректних запитів.
 
-The `specs/` directory contains individual implementation steps.
+### Агрегатні ендпоінти
 
-Each `spec.md` represents exactly one implementation step.
+- Правильні значення загальної статистики.
+- Правильне групування за видами тренувань.
+- Правильне групування за місяцями.
+- Правильну фільтрацію найактивніших користувачів.
+- Правильний підрахунок тривалих тренувань.
+- Коректну обробку порожніх сум.
 
-A specification must clearly define:
+### Безпека
 
-1. Objective.
-2. Files to create.
-3. Files to modify, if any.
-4. Detailed implementation requirements.
-5. Acceptance criteria.
-6. Verification instructions.
-7. Expected result.
+- Некоректний `group_by` повертає 422.
+- Некоректний `metric` повертає 422.
+- Статистика враховує `owner_id`.
+- Відповіді з помилками не розкривають SQL-запити або конфіденційні параметри бази даних.
 
-Complete one specification before starting the next.
+### Додаткові завдання
 
-Do not combine multiple independent implementation steps into one uncontrolled operation.
+- Правильне обчислення накопичувальної дистанції.
+- Правильне ранжування видів тренувань.
 
-After each step:
-
-- Review the changed files.
-- Run the relevant checks.
-- Verify acceptance criteria.
-- Report completed work.
-- Report any unresolved issues.
-- Wait for approval before proceeding to the next step.
-
-Do not mark a step complete if its acceptance criteria have not been verified.
-
-Do not silently skip requirements.
+Інтеграційні тести виконувати з використанням MySQL / MariaDB, оскільки застосунок залежить від специфічної поведінки MySQL/MariaDB, зокрема `date_format()` та правил групування.
 
 ---
 
-## 16. Development Principles
+## 14. Документація
 
-Follow these principles throughout implementation:
+Створити `README.md`, який містить:
 
-1. The attached homework DOCX is the authoritative functional specification.
-2. The SQLAlchemy presentation is the technical learning reference.
-3. Implement the exact required functionality before adding optional improvements.
-4. Use database aggregation rather than Python-side aggregation.
-5. Prefer readable SQLAlchemy expressions.
-6. Keep routers, services, models, and schemas separated.
-7. Respect MySQL / MariaDB 10.4.32 behavior.
-8. Validate all input.
-9. Protect database information.
-10. Keep every implementation step independently testable.
-11. Do not invent business requirements.
-12. Do not introduce unnecessary functionality.
+- Опис проєкту.
+- Технологічний стек.
+- Структуру проєкту.
+- Інструкції зі встановлення.
+- Налаштування середовища.
+- Налаштування бази даних MySQL.
+- Створення таблиць.
+- Запуск початкового набору даних.
+- Запуск застосунку.
+- Доступ до документації API.
+- Приклади запитів.
 
-The code should be understandable to a student learning FastAPI, SQLAlchemy ORM, and aggregate SQL queries.
-
----
-
-## 17. Definition of Done
-
-The mandatory project is complete when:
-
-- [x] Both ORM models are implemented.
-- [x] MySQL connection works.
-- [x] Database tables are created correctly.
-- [x] All required CRUD endpoints work.
-- [x] Pagination and owner filtering work.
-- [x] All required Pydantic schemas are implemented.
-- [x] Seed data meets the minimum requirements.
-- [x] All five mandatory aggregate endpoints work.
-- [x] The dynamic aggregation endpoint uses secure whitelists.
-- [x] Enum or Literal validation returns HTTP 422 for invalid values.
-- [x] All statistics are properly restricted by owner.
-- [x] Empty aggregate results are handled correctly.
-- [x] MySQL `ONLY_FULL_GROUP_BY` compatibility is verified.
-- [x] SQL statements and sensitive parameters are not exposed in error responses.
-- [x] README.md contains working setup instructions.
-- [x] All mandatory acceptance tests pass.
-
-Bonus endpoints are additional achievements and must not be considered prerequisites for completing the mandatory project.
+Детальний план реалізації зберігати в каталозі `specs/`.
 
 ---
 
-## 18. Progress Tracker
+## 15. Процес розробки
 
-Mark each step only after its acceptance criteria are verified.
+Розробляти проєкт поступово.
 
-- [x] SPEC 01 — Project foundation and database connection
-- [x] SPEC 02 — ORM models and table creation
-- [x] SPEC 03 — Pydantic schemas and CRUD endpoints
-- [x] SPEC 04 — Seed data and basic operations check
-- [x] SPEC 05 — Aggregates: summary and by-kind
-- [x] SPEC 06 — Aggregates: by-month, top-users, done-ratio
-- [x] SPEC 07 — Secure dynamic aggregation `/stats/group`
-- [x] SPEC 08 — Window functions, final testing, documentation
+Каталог `specs/` містить окремі етапи реалізації.
+
+Кожен `spec.md` описує рівно один етап реалізації.
+
+Специфікація повинна чітко визначати:
+
+1. Мету.
+2. Файли, які потрібно створити.
+3. Файли, які потрібно змінити, якщо такі є.
+4. Детальні вимоги до реалізації.
+5. Критерії приймання.
+6. Інструкції з перевірки.
+7. Очікуваний результат.
+
+Завершувати одну специфікацію перед початком наступної.
+
+Не об'єднувати кілька незалежних етапів реалізації в одну неконтрольовану операцію.
+
+Після кожного етапу:
+
+- Перевірити змінені файли.
+- Запустити відповідні перевірки.
+- Переконатися у виконанні критеріїв приймання.
+- Повідомити про виконану роботу.
+- Повідомити про невирішені проблеми, якщо вони є.
+- Дочекатися погодження перед переходом до наступного етапу.
+
+Не позначати етап як завершений, якщо його критерії приймання не перевірені.
+
+Не пропускати вимоги непомітно.
 
 ---
 
-## Final Mission
+## 16. Принципи розробки
 
-Build a complete and working Workout Tracking API that satisfies the original homework specification exactly.
+Дотримуватися таких принципів протягом усього процесу реалізації:
 
-Use FastAPI, Pydantic 2, SQLAlchemy 2.1 ORM, MySQL / MariaDB 10.4.32, and PyMySQL.
+1. Прикріплений DOCX із завданням є основним джерелом функціональних вимог.
+2. Презентація SQLAlchemy є технічним навчальним орієнтиром.
+3. Спочатку реалізувати точну обов'язкову функціональність, а потім додавати необов'язкові покращення.
+4. Використовувати агрегатні обчислення бази даних замість обчислень у Python.
+5. Віддавати перевагу зрозумілим виразам SQLAlchemy.
+6. Розділяти маршрути, сервіси, моделі та схеми.
+7. Враховувати особливості MySQL / MariaDB 10.4.32.
+8. Перевіряти всі вхідні дані.
+9. Захищати інформацію бази даних.
+10. Забезпечувати можливість незалежного тестування кожного етапу.
+11. Не вигадувати бізнес-вимоги.
+12. Не додавати зайву функціональність.
 
-Demonstrate correct aggregate queries, secure dynamic grouping, proper NULL handling, and efficient database-side calculations.
+Код повинен бути зрозумілим студенту, який вивчає FastAPI, SQLAlchemy ORM та агрегатні SQL-запити.
 
-Develop the application step by step according to the independent specifications in `specs/`.
+---
 
-The final result must be runnable, testable, understandable, and ready for demonstration.
+## 17. Критерії завершення проєкту
+
+Обов'язкова частина проєкту вважається завершеною, коли:
+
+- [x] Обидві ORM-моделі реалізовані.
+- [x] Підключення до MySQL працює.
+- [x] Таблиці бази даних створюються правильно.
+- [x] Усі необхідні CRUD-ендпоінти працюють.
+- [x] Пагінація та фільтрація за власником працюють.
+- [x] Усі необхідні Pydantic-схеми реалізовані.
+- [x] Початкові дані відповідають мінімальним вимогам.
+- [x] Усі п'ять обов'язкових агрегатних ендпоінтів працюють.
+- [x] Ендпоінт динамічної агрегації використовує безпечні списки дозволених значень.
+- [x] Валідація через Enum або Literal повертає HTTP 422 для некоректних значень.
+- [x] Уся статистика належним чином обмежується за власником.
+- [x] Порожні результати агрегатних запитів обробляються правильно.
+- [x] Сумісність із MySQL `ONLY_FULL_GROUP_BY` перевірена.
+- [x] SQL-запити та конфіденційні параметри не розкриваються у відповідях з помилками.
+- [x] README.md містить робочі інструкції з налаштування.
+- [x] Усі обов'язкові критерії приймання перевірені успішними тестами.
+
+Додаткові ендпоінти є окремими досягненнями та не повинні вважатися обов'язковою умовою завершення основного проєкту.
+
+---
+
+## 18. Відстеження прогресу
+
+Позначати кожен етап як завершений лише після перевірки його критеріїв приймання.
+
+- [x] SPEC 01 — Основа проєкту та підключення до бази даних
+- [x] SPEC 02 — ORM-моделі та створення таблиць
+- [x] SPEC 03 — Pydantic-схеми та CRUD-ендпоінти
+- [x] SPEC 04 — Початкові дані та перевірка базових операцій
+- [x] SPEC 05 — Агрегати: загальна статистика та статистика за видами
+- [x] SPEC 06 — Агрегати: статистика за місяцями, найактивніші користувачі, частка тривалих тренувань
+- [x] SPEC 07 — Безпечна динамічна агрегація `/stats/group`
+- [x] SPEC 08 — Віконні функції, фінальне тестування та документація
+
+---
+
+## Підсумкова місія
+
+Створити повноцінний робочий Workout Tracking API, який точно відповідає початковому завданню.
+
+Використовувати FastAPI, Pydantic 2, SQLAlchemy 2.1 ORM, MySQL / MariaDB 10.4.32 та PyMySQL.
+
+Продемонструвати правильне використання агрегатних запитів, безпечного динамічного групування, обробки NULL та ефективних обчислень на стороні бази даних.
+
+Розробляти застосунок поступово відповідно до окремих специфікацій у каталозі `specs/`.
+
+Кінцевий результат повинен запускатися, тестуватися, бути зрозумілим та готовим до демонстрації.

@@ -90,8 +90,8 @@ def test_summary_values_and_empty(client: TestClient, make_user: Callable[..., i
     assert data["total_workouts"] == 2
     assert data["total_minutes"] == 120
     assert Decimal(data["total_km"]) == Decimal("6.50")
-    assert Decimal(data["avg_duration"]) == Decimal("60")
-    assert Decimal(data["min_distance"]) == Decimal("0")
+    assert Decimal(data["avg_duration"]) == Decimal(60)
+    assert Decimal(data["min_distance"]) == Decimal(0)
     assert Decimal(data["max_distance"]) == Decimal("6.50")
 
     empty = client.get(f"/stats/summary?owner_id={make_user()}").json()
@@ -201,7 +201,7 @@ def test_group_valid_combinations(client: TestClient, make_user: Callable[..., i
     distance = group("kind", "sum_distance")
     assert Decimal(distance["run"]) == Decimal("8.00")
     avg = group("kind", "avg_duration")
-    assert Decimal(avg["run"]) == Decimal("40")
+    assert Decimal(avg["run"]) == Decimal(40)
     assert group("owner_id", "count") == {owner: 3}
 
 
