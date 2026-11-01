@@ -10,13 +10,17 @@ from app.schemas import (
     GroupStatsResponse,
     Metric,
     MonthlyStatsResponse,
+    RunningTotalResponse,
     SummaryResponse,
     TopUserStatsResponse,
+    WorkoutKindRankResponse,
     WorkoutKindStats,
 )
 from app.services.stats_service import (
     get_done_ratio,
     get_group_stats,
+    get_kind_rank,
+    get_running_total,
     get_stats_by_kind,
     get_stats_by_month,
     get_summary,
@@ -103,3 +107,27 @@ def group_stats_endpoint(
         metric=metric,
         owner_id=owner_id,
     )
+
+
+@router.get(
+    "/running-total",
+    response_model=list[RunningTotalResponse],
+)
+def running_total_endpoint(
+    owner_id: Annotated[int, Query(gt=0)],
+    session: Annotated[Session, Depends(get_db)],
+) -> list[RunningTotalResponse]:
+    """Get cumulative workout distance over time for a user."""
+    return get_running_total(session=session, owner_id=owner_id)
+
+
+@router.get(
+    "/rank",
+    response_model=list[WorkoutKindRankResponse],
+)
+def kind_rank_endpoint(
+    owner_id: Annotated[int, Query(gt=0)],
+    session: Annotated[Session, Depends(get_db)],
+) -> list[WorkoutKindRankResponse]:
+    """Rank a user's workout kinds by total duration."""
+    return get_kind_rank(session=session, owner_id=owner_id)

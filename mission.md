@@ -668,24 +668,39 @@ The code should be understandable to a student learning FastAPI, SQLAlchemy ORM,
 
 The mandatory project is complete when:
 
-- Both ORM models are implemented.
-- MySQL connection works.
-- Database tables are created correctly.
-- All required CRUD endpoints work.
-- Pagination and owner filtering work.
-- All required Pydantic schemas are implemented.
-- Seed data meets the minimum requirements.
-- All five mandatory aggregate endpoints work.
-- The dynamic aggregation endpoint uses secure whitelists.
-- Enum or Literal validation returns HTTP 422 for invalid values.
-- All statistics are properly restricted by owner.
-- Empty aggregate results are handled correctly.
-- MySQL `ONLY_FULL_GROUP_BY` compatibility is verified.
-- SQL statements and sensitive parameters are not exposed in error responses.
-- README.md contains working setup instructions.
-- All mandatory acceptance tests pass.
+- [x] Both ORM models are implemented.
+- [x] MySQL connection works.
+- [x] Database tables are created correctly.
+- [x] All required CRUD endpoints work.
+- [x] Pagination and owner filtering work.
+- [x] All required Pydantic schemas are implemented.
+- [x] Seed data meets the minimum requirements.
+- [x] All five mandatory aggregate endpoints work.
+- [x] The dynamic aggregation endpoint uses secure whitelists.
+- [x] Enum or Literal validation returns HTTP 422 for invalid values.
+- [x] All statistics are properly restricted by owner.
+- [x] Empty aggregate results are handled correctly.
+- [x] MySQL `ONLY_FULL_GROUP_BY` compatibility is verified.
+- [x] SQL statements and sensitive parameters are not exposed in error responses.
+- [x] README.md contains working setup instructions.
+- [x] All mandatory acceptance tests pass.
 
 Bonus endpoints are additional achievements and must not be considered prerequisites for completing the mandatory project.
+
+---
+
+## 18. Progress Tracker
+
+Mark each step only after its acceptance criteria are verified.
+
+- [x] SPEC 01 — Project foundation and database connection
+- [x] SPEC 02 — ORM models and table creation
+- [x] SPEC 03 — Pydantic schemas and CRUD endpoints
+- [x] SPEC 04 — Seed data and basic operations check
+- [x] SPEC 05 — Aggregates: summary and by-kind
+- [x] SPEC 06 — Aggregates: by-month, top-users, done-ratio
+- [x] SPEC 07 — Secure dynamic aggregation `/stats/group`
+- [x] SPEC 08 — Window functions, final testing, documentation
 
 ---
 

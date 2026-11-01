@@ -11,9 +11,11 @@ from app.schemas import (
     GroupStatsResponse,
     Metric,
     MonthlyStatsResponse,
+    RunningTotalResponse,
     SummaryResponse,
     TopUserStatsResponse,
     WorkoutKind,
+    WorkoutKindRankResponse,
     WorkoutKindStats,
 )
 
@@ -220,6 +222,67 @@ def get_group_stats(
                 if metric in integer_metrics
                 else row.value
             ),
+        )
+        for row in rows
+    ]
+
+
+def get_running_total(
+    session: Session,
+    owner_id: int,
+) -> list[RunningTotalResponse]:
+    """Return workouts with cumulative distance calculated by SUM() OVER()."""
+    running_total = func.sum(Workout.distance_km).over(
+        order_by=[Workout.done_on, Workout.id]
+    )
+
+    stmt = (
+        select(
+            Workout.done_on,
+            Workout.distance_km,
+            running_total.label("running_total_km"),
+        )
+        .where(Workout.owner_id == owner_id)
+        .order_by(Workout.done_on, Workout.id)
+    )
+
+    rows = session.execute(stmt).all()
+
+    return [
+        RunningTotalResponse(
+            done_on=row.done_on,
+            distance_km=row.distance_km,
+            running_total_km=Decimal(row.running_total_km),
+        )
+        for row in rows
+    ]
+
+
+def get_kind_rank(
+    session: Session,
+    owner_id: int,
+) -> list[WorkoutKindRankResponse]:
+    """Rank workout kinds by total duration using RANK() OVER()."""
+    total_duration = func.sum(Workout.duration_min)
+
+    stmt = (
+        select(
+            Workout.kind,
+            total_duration.label("total_duration_min"),
+            func.rank().over(order_by=total_duration.desc()).label("rank"),
+        )
+        .where(Workout.owner_id == owner_id)
+        .group_by(Workout.kind)
+        .order_by(total_duration.desc(), Workout.kind)
+    )
+
+    rows = session.execute(stmt).all()
+
+    return [
+        WorkoutKindRankResponse(
+            kind=WorkoutKind(row.kind),
+            total_duration_min=int(row.total_duration_min),
+            rank=int(row.rank),
         )
         for row in rows
     ]

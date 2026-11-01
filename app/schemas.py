@@ -134,6 +134,22 @@ class GroupStatsResponse(BaseModel):
     value: int | Decimal | None
 
 
+class RunningTotalResponse(BaseModel):
+    """Schema for one workout with cumulative distance."""
+
+    done_on: date
+    distance_km: Decimal
+    running_total_km: Decimal
+
+
+class WorkoutKindRankResponse(BaseModel):
+    """Schema for a workout kind ranked by total duration."""
+
+    kind: WorkoutKind
+    total_duration_min: int
+    rank: int
+
+
 class WorkoutKindStats(BaseModel):
     """Schema for workout statistics grouped by workout kind."""
 
