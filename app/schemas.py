@@ -110,6 +110,30 @@ class DoneRatioResponse(BaseModel):
     total_workouts_count: int
 
 
+class GroupBy(StrEnum):
+    """Allowed grouping fields for dynamic aggregation."""
+
+    KIND = "kind"
+    OWNER_ID = "owner_id"
+
+
+class Metric(StrEnum):
+    """Allowed aggregate metrics for dynamic aggregation."""
+
+    COUNT = "count"
+    SUM_DURATION = "sum_duration"
+    SUM_DISTANCE = "sum_distance"
+    AVG_DURATION = "avg_duration"
+
+
+class GroupStatsResponse(BaseModel):
+    """Schema for one group of a dynamic aggregation result."""
+
+    group_value: int | str
+    metric: Metric
+    value: int | Decimal | None
+
+
 class WorkoutKindStats(BaseModel):
     """Schema for workout statistics grouped by workout kind."""
 

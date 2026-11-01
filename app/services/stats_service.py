@@ -7,6 +7,9 @@ from sqlalchemy.orm import Session
 from app.models import User, Workout
 from app.schemas import (
     DoneRatioResponse,
+    GroupBy,
+    GroupStatsResponse,
+    Metric,
     MonthlyStatsResponse,
     SummaryResponse,
     TopUserStatsResponse,
@@ -15,6 +18,22 @@ from app.schemas import (
 )
 
 LONG_WORKOUT_MIN_DURATION = 60
+
+# Whitelists of ready-made SQLAlchemy expressions for /stats/group.
+# User input is only ever used as a dictionary key, never as an identifier.
+GROUP_COLUMNS = {
+    GroupBy.KIND: Workout.kind,
+    GroupBy.OWNER_ID: Workout.owner_id,
+}
+
+METRICS = {
+    Metric.COUNT: func.count(Workout.id),
+    Metric.SUM_DURATION: func.coalesce(func.sum(Workout.duration_min), 0),
+    Metric.SUM_DISTANCE: func.coalesce(
+        func.sum(Workout.distance_km), Decimal("0.00")
+    ),
+    Metric.AVG_DURATION: func.avg(Workout.duration_min),
+}
 
 
 def get_summary(session: Session, owner_id: int) -> SummaryResponse:
@@ -164,3 +183,43 @@ def get_done_ratio(session: Session, owner_id: int) -> DoneRatioResponse:
         long_workouts_count=int(row.long_workouts_count),
         total_workouts_count=int(row.total_workouts_count),
     )
+
+
+def get_group_stats(
+    session: Session,
+    group_by: GroupBy,
+    metric: Metric,
+    owner_id: int,
+) -> list[GroupStatsResponse]:
+    """Run a dynamic aggregation built only from whitelisted expressions."""
+    group_column = GROUP_COLUMNS[group_by]
+    metric_expr = METRICS[metric]
+
+    stmt = (
+        select(
+            group_column.label("group_value"),
+            metric_expr.label("value"),
+        )
+        .where(Workout.owner_id == owner_id)
+        .group_by(group_column)
+        .order_by(group_column)
+    )
+
+    rows = session.execute(stmt).all()
+
+    # MySQL/MariaDB returns SUM() of integers as DECIMAL, so integer metrics
+    # are converted back to int to keep the JSON value numeric.
+    integer_metrics = {Metric.COUNT, Metric.SUM_DURATION}
+
+    return [
+        GroupStatsResponse(
+            group_value=row.group_value,
+            metric=metric,
+            value=(
+                int(row.value)
+                if metric in integer_metrics
+                else row.value
+            ),
+        )
+        for row in rows
+    ]

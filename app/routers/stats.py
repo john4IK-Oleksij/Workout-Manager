@@ -6,6 +6,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas import (
     DoneRatioResponse,
+    GroupBy,
+    GroupStatsResponse,
+    Metric,
     MonthlyStatsResponse,
     SummaryResponse,
     TopUserStatsResponse,
@@ -13,6 +16,7 @@ from app.schemas import (
 )
 from app.services.stats_service import (
     get_done_ratio,
+    get_group_stats,
     get_stats_by_kind,
     get_stats_by_month,
     get_summary,
@@ -80,3 +84,22 @@ def done_ratio_endpoint(
 ) -> DoneRatioResponse:
     """Get long workout count (>= 60 min) and total workout count for a user."""
     return get_done_ratio(session=session, owner_id=owner_id)
+
+
+@router.get(
+    "/group",
+    response_model=list[GroupStatsResponse],
+)
+def group_stats_endpoint(
+    group_by: GroupBy,
+    metric: Metric,
+    owner_id: Annotated[int, Query(gt=0)],
+    session: Annotated[Session, Depends(get_db)],
+) -> list[GroupStatsResponse]:
+    """Get dynamic aggregation using whitelisted grouping column and metric."""
+    return get_group_stats(
+        session=session,
+        group_by=group_by,
+        metric=metric,
+        owner_id=owner_id,
+    )
